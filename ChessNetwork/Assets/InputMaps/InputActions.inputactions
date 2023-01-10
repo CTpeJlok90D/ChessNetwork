@@ -1,0 +1,90 @@
+{
+    "name": "InputActions",
+    "maps": [
+        {
+            "name": "Standart",
+            "id": "42890796-11ba-4f5f-8bfc-a610f6878b56",
+            "actions": [
+                {
+                    "name": "OpenEscMenu",
+                    "type": "Button",
+                    "id": "83cf073b-77b6-41e1-8f8c-cf5148375289",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "080492b0-dbee-453d-b5eb-fdb4b9a6217d",
+                    "path": "<Keyboard>/escape",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "OpenEscMenu",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
+        },
+        {
+            "name": "CameraRotate",
+            "id": "6becee38-281d-493a-8f4d-6d5fe6683076",
+            "actions": [
+                {
+                    "name": "Rotate",
+                    "type": "Value",
+                    "id": "e827a030-770f-43aa-9063-1d0d6c64b990",
+                    "expectedControlType": "Vector2",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "7a01c2b8-31a1-4014-b96c-43c75d8ef893",
+                    "path": "<Mouse>/delta",
+                    "interactions": "",
+                    "processors": "InvertVector2(invertX=false),ScaleVector2(x=0.25,y=0.25)",
+                    "groups": "",
+                    "action": "Rotate",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
+        },
+        {
+            "name": "MapSwither",
+            "id": "49c6e2a4-87f7-4779-a404-54eb54a47230",
+            "actions": [
+                {
+                    "name": "StartCameraRotate",
+                    "type": "Button",
+                    "id": "c7860a74-b292-4e31-9c26-a4a5c8767dad",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "f8649e87-fa49-40b3-9f1a-cce7614bbdea",
+                    "path": "<Mouse>/rightButton",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "StartCameraRotate",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
+        }
+    ],
+    "controlSchemes": []
+}

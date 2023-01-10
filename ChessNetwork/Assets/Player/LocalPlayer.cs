@@ -1,6 +1,19 @@
-using Unity.Collections;
+using UnityEngine;
+using UnityEngine.Events;
 
 public static class LocalPlayer
 {
-    public static FixedString128Bytes Nickname;
+    public static string Nickname 
+    {
+        get
+        {
+            return PlayerPrefs.GetString("NICKNAME");
+        }
+        set
+        {
+            PlayerPrefs.SetString("NICKNAME", value.ToString());
+        }
+    }
+
+    
 }
