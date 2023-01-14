@@ -5,44 +5,21 @@ public class FigurePositionNetcode : NetworkBehaviour
 {
     [SerializeField] private NetworkVariable<Vector2Int> _position = new(new Vector2Int());
 
-    private Vector2Int _startPosition;
-
     public Vector2Int position 
     {
         get
         {
-            return new Vector2Int((int)transform.localPosition.x, (int)transform.localPosition.y);
+            return new Vector2Int((int)transform.localPosition.x, (int)transform.localPosition.z);
         }
         set
         {
             _position.Value = value;
-            MoveFigureClientRpc(_position.Value);
-        }
-    }
-
-    [ClientRpc]
-    private void MoveFigureClientRpc(Vector2Int newPosition)
-    {
-        transform.localPosition = new Vector3(newPosition.x, 0, newPosition.y);
-    }
-
-    private void Awake()
-    {
-        _startPosition = new Vector2Int((int)transform.localPosition.x, (int)transform.localPosition.y);
-    }
-
-    public override void OnNetworkSpawn()
-    {
-        if (IsServer)
-        {
-            _position.Value = _startPosition;
-            transform.localPosition = new Vector3(_startPosition.x, _startPosition.y);
         }
     }
 
     public override void OnNetworkDespawn()
     {
-        transform.localPosition = _position.Value.ToVector3();
+        transform.localPosition = new Vector3(_position.Value.x, 0 , _position.Value.y);
     }
 
     private void OnEnable()
@@ -61,6 +38,15 @@ public class FigurePositionNetcode : NetworkBehaviour
     }
 
 #if UNITY_EDITOR
-    public Vector2Int newPositionInspectorGUI;
+    public Vector2Int newPositionInspectorGUI_EDITOR_ONLY;
+
+    private void OnValidate()
+    {
+        if (Application.isEditor)
+        {
+            newPositionInspectorGUI_EDITOR_ONLY = position;
+            _position.Value = position;
+        }
+    }
 #endif
 }

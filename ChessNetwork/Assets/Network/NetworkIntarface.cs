@@ -21,7 +21,6 @@ public class NetworkIntarface : MonoBehaviour
         _nicknameInputField.text = LocalPlayer.Nickname;
     }
 
-    #region Events subscride
     private void OnEnable()
     {
         _connectButton.onClick.AddListener(OnConnectClick);
@@ -39,17 +38,15 @@ public class NetworkIntarface : MonoBehaviour
         _ipInputField.onEndEdit.RemoveListener(OnIpFieldChanged);
         _gameStateChanger.StateChanged.RemoveListener(OnSessionStart);
     }
-    #endregion
 
-    #region Events handlers
     private void OnConnectClick()
     {
         if (string.IsNullOrEmpty(LocalPlayer.Nickname.ToString()))
         {
             return;
         }
-        OnServerConnect();
         _networkManager.StartClient();
+        OnServerConnect();
     }
 
     private void OnHostClick()
@@ -58,8 +55,8 @@ public class NetworkIntarface : MonoBehaviour
         {
             return;
         }
-        OnServerConnect();
         _networkManager.StartHost();
+        OnServerConnect();
     }
 
     private void OnServerConnect()
@@ -96,5 +93,4 @@ public class NetworkIntarface : MonoBehaviour
     {
         LocalPlayer.Nickname = newNickname;
     }
-    #endregion
 }

@@ -9,7 +9,7 @@ public class FigureEditor : Editor
 
     private void OnEnable()
     {
-        target.newPositionInspectorGUI = new Vector2Int((int)target.transform.localPosition.x, (int)target.transform.localPosition.z);
+        target.newPositionInspectorGUI_EDITOR_ONLY = new Vector2Int((int)target.transform.localPosition.x, (int)target.transform.localPosition.z);
     }
 
     public override void OnInspectorGUI()
@@ -19,7 +19,7 @@ public class FigureEditor : Editor
         {
             if(NetworkManager.Singleton.IsServer)
             {
-                target.position = target.newPositionInspectorGUI;
+                target.position = target.newPositionInspectorGUI_EDITOR_ONLY;
             }
             else
             {

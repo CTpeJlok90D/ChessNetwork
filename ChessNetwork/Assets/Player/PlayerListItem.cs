@@ -1,6 +1,5 @@
 using System.Collections;
 using TMPro;
-using Unity.Collections.LowLevel.Unsafe;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -57,7 +56,7 @@ public class PlayerListItem : MonoBehaviour
         UpdateReadyState(player.IsReady);
     }
 
-    private void OnReadyStateChanged(bool newValue)
+    private void OnReadyStateChanged(bool previewValue ,bool newValue)
     {
         UpdateReadyState(newValue);
     }
