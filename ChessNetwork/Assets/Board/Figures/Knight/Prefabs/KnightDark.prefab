@@ -14,7 +14,6 @@ GameObject:
   - component: {fileID: 1942017836347671676}
   - component: {fileID: 8014603750322321946}
   - component: {fileID: -1124546542795000802}
-  - component: {fileID: 2663056890197337157}
   - component: {fileID: 2687369757621648021}
   m_Layer: 0
   m_Name: KnightDark
@@ -114,7 +113,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ec307541476201b41a98a2390ba54688, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _ownerPositionNetcode: {fileID: 2663056890197337157}
   _board: {fileID: 0}
   _team: 0
 --- !u!114 &-1124546542795000802
@@ -133,21 +131,6 @@ MonoBehaviour:
   AlwaysReplicateAsRoot: 0
   DontDestroyWithOwner: 0
   AutoObjectParentSync: 1
---- !u!114 &2663056890197337157
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1179637952412708}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9437ad03346327c4b9fcbd8772e508d0, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _position:
-    m_InternalValue: {x: 0, y: 0}
-  newPositionInspectorGUI_EDITOR_ONLY: {x: 0, y: 0}
 --- !u!114 &2687369757621648021
 MonoBehaviour:
   m_ObjectHideFlags: 0

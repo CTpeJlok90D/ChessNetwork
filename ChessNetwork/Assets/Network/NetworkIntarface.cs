@@ -8,7 +8,6 @@ public class NetworkIntarface : MonoBehaviour
 {
     [SerializeField] private UNetTransport _transport;
     [SerializeField] private GameObject _connectPanel;
-    [SerializeField] private NetworkManager _networkManager;
     [SerializeField] private Button _connectButton;
     [SerializeField] private Button _hostButton;
     [SerializeField] private TMP_InputField _ipInputField;
@@ -45,9 +44,10 @@ public class NetworkIntarface : MonoBehaviour
         {
             return;
         }
-        _networkManager.StartClient();
-        OnServerConnect();
+        NetworkManager.Singleton.OnClientConnectedCallback += OnConnect;
+        NetworkManager.Singleton.StartClient();
     }
+
 
     private void OnHostClick()
     {
@@ -55,15 +55,16 @@ public class NetworkIntarface : MonoBehaviour
         {
             return;
         }
-        _networkManager.StartHost();
-        OnServerConnect();
+        NetworkManager.Singleton.OnClientConnectedCallback += OnConnect;
+        NetworkManager.Singleton.StartHost();
     }
 
-    private void OnServerConnect()
+    private void OnConnect(ulong id)
     {
         _connectPanel.SetActive(false);
         _lobbyUI.SetActive(true);
         Player.Disconected.AddListener(OnServerDisconect);
+        NetworkManager.Singleton.OnClientConnectedCallback -= OnConnect;
     }
 
     private void OnServerDisconect(Player player)

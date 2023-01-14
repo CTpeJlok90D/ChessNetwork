@@ -5,17 +5,18 @@ using UnityEngine.Events;
 
 public abstract class Figure : NetworkBehaviour
 {
-    [SerializeField] private FigurePositionNetcode _ownerPositionNetcode;
     [SerializeField] private Board _board;
     [SerializeField] private Team _team;
+
+    private NetworkVariable<Vector2Int> _position = new();
 
     private UnityEvent _selected = new();
     private UnityEvent _deselected = new();
 
-    public Vector2Int Position => _ownerPositionNetcode.position;
     public UnityEvent Selected => _selected;
     public UnityEvent Deselected => _deselected;
     public Board Board => _board;
+    public Vector2Int Position => _position.Value;
 
     private static List<Figure> _all = new();
     private static Figure _choosen;
@@ -27,12 +28,17 @@ public abstract class Figure : NetworkBehaviour
         get;
     }
 
-    public void OnEnable()
+    private void Awake()
+    {
+        _position.Value = new Vector2Int((int)transform.position.x,(int)transform.position.z);
+    }
+
+    private void OnEnable()
     {
         _all.Add(this);
     }
 
-    public void OnDisable()
+    private void OnDisable()
     {
         _all.Remove(this);
     }
@@ -69,6 +75,6 @@ public abstract class Figure : NetworkBehaviour
 
     public void UseTurn(Turn turn)
     {
-        _ownerPositionNetcode.position = turn.MovePosition;
+        Deselect();
     }
 }

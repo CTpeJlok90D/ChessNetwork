@@ -4,7 +4,7 @@ using UnityEngine.Events;
 public class TurnView : MonoBehaviour
 {
     private Turn _turn;
-    private UnityEvent _cicked;
+    private UnityEvent _cicked = new();
 
     public UnityEvent Clicked => _cicked;
 

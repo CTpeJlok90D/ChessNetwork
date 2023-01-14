@@ -13,7 +13,6 @@ GameObject:
   - component: {fileID: 23160403841118764}
   - component: {fileID: 2205473423746477440}
   - component: {fileID: 1704514106038959938}
-  - component: {fileID: 8018514420369807046}
   m_Layer: 0
   m_Name: PawnLight
   m_TagString: Untagged
@@ -98,7 +97,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a4d40db6e3f1e8b4eb11a31276abb1c0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _ownerPositionNetcode: {fileID: 8018514420369807046}
+  _board: {fileID: 0}
   _team: 1
 --- !u!114 &1704514106038959938
 MonoBehaviour:
@@ -116,18 +115,3 @@ MonoBehaviour:
   AlwaysReplicateAsRoot: 0
   DontDestroyWithOwner: 0
   AutoObjectParentSync: 1
---- !u!114 &8018514420369807046
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1006356879557798}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9437ad03346327c4b9fcbd8772e508d0, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _position:
-    m_InternalValue: {x: 0, y: 0}
-  newPositionInspectorGUI: {x: 0, y: 0}

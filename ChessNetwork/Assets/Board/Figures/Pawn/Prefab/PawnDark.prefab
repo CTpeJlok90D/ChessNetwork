@@ -12,8 +12,7 @@ GameObject:
   - component: {fileID: 33039705604623312}
   - component: {fileID: 23288229226541454}
   - component: {fileID: 1431946713938760805}
-  - component: {fileID: -6180502448584484072}
-  - component: {fileID: -3088382514585975890}
+  - component: {fileID: 3275643274581102157}
   m_Layer: 0
   m_Name: PawnDark
   m_TagString: Untagged
@@ -98,9 +97,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a4d40db6e3f1e8b4eb11a31276abb1c0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _ownerPositionNetcode: {fileID: -3088382514585975890}
+  _board: {fileID: 0}
   _team: 0
---- !u!114 &-6180502448584484072
+--- !u!114 &3275643274581102157
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -116,18 +115,3 @@ MonoBehaviour:
   AlwaysReplicateAsRoot: 0
   DontDestroyWithOwner: 0
   AutoObjectParentSync: 1
---- !u!114 &-3088382514585975890
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1867195236767680}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9437ad03346327c4b9fcbd8772e508d0, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _position:
-    m_InternalValue: {x: 0, y: 0}
-  newPositionInspectorGUI: {x: 0, y: 0}

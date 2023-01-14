@@ -12,6 +12,17 @@ public class PlayerListUI : MonoBehaviour
     {
         Player.Connected.AddListener(AddPlayer);
         Player.Disconected.AddListener(RemovePlayer);
+
+        foreach (PlayerListItem player in _playerListItems.Values)
+        {
+            Destroy(player);
+        }
+        _playerListItems.Clear();
+
+        foreach (Player player in Player.List)
+        {
+            AddPlayer(player);
+        }
     }
 
     private void OnDisable()
