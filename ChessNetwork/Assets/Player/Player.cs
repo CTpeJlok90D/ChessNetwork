@@ -63,7 +63,6 @@ public class Player : NetworkBehaviour
 
     private void OnClientConnected(ulong obj)
     {
-        Debug.Log("test");
         if (IsLocalPlayer)
         {
             Nickname = LocalPlayer.Nickname;

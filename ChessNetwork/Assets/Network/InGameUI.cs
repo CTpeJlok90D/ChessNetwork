@@ -7,29 +7,15 @@ public class InGameUI : MonoBehaviour
 
     private void OnEnable()
     {
-        _gameStateChanger.StateChanged.AddListener(OnGameStateChange);
+        _gameStateChanger.SessionStart.AddListener(OnRoundStart);
     }
-
-    private void OnGameStateChange(GameStateChanger.State state)
+    private void OnDisable()
     {
-        switch (state)
-        {
-            case GameStateChanger.State.Launched:
-                OnRoundStart();
-            break;
-            case GameStateChanger.State.WaitingLobby:
-                OnRoundEnd(); 
-            break;
-        }
+        _gameStateChanger.SessionStart.RemoveListener(OnRoundStart);
     }
 
     private void OnRoundStart()
     {
         _inGameUI.SetActive(false);
-    }
-
-    private void OnRoundEnd()
-    {
-        _inGameUI.SetActive(true);
     }
 }

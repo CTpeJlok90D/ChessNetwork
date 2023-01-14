@@ -26,7 +26,7 @@ public class NetworkIntarface : MonoBehaviour
         _hostButton.onClick.AddListener(OnHostClick);
         _nicknameInputField.onEndEdit.AddListener(OnNicknameChange);
         _ipInputField.onEndEdit.AddListener(OnIpFieldChanged);
-        _gameStateChanger.StateChanged.AddListener(OnSessionStart);
+        _gameStateChanger.SessionStart.AddListener(OnSessionStart);
     }
 
     private void OnDisable()
@@ -35,7 +35,7 @@ public class NetworkIntarface : MonoBehaviour
         _hostButton.onClick.RemoveListener(OnHostClick);
         _nicknameInputField.onEndEdit.RemoveListener(OnNicknameChange);
         _ipInputField.onEndEdit.RemoveListener(OnIpFieldChanged);
-        _gameStateChanger.StateChanged.RemoveListener(OnSessionStart);
+        _gameStateChanger.SessionStart.RemoveListener(OnSessionStart);
     }
 
     private void OnConnectClick()
@@ -77,12 +77,9 @@ public class NetworkIntarface : MonoBehaviour
         }
     }
 
-    private void OnSessionStart(GameStateChanger.State state)
+    private void OnSessionStart()
     {
-        if (state is GameStateChanger.State.Launched)
-        {
-            _lobbyUI.SetActive(false);
-        }
+        _lobbyUI.SetActive(false);
     }
 
     private void OnIpFieldChanged(string newIP)

@@ -11,7 +11,7 @@ public class GameStateChangerEditor : Editor
         base.OnInspectorGUI();
         if (GUILayout.Button("forced start"))
         {
-            target.StartRoundServerRpc();
+            target.StartSession();
         }
     }
 }

@@ -50,7 +50,7 @@ public class AdminPanel : MonoBehaviour
         }
         if (notReadyPlayerCount == 0 && whitePlayerCount != 0 && blackPlayerCount != 0)
         {
-            GameStateChanger.Singletone.StartRoundServerRpc();
+            GameStateChanger.Singletone.StartSession();
             return;
         }
         _stateField.text = _somePlayerNotReady;

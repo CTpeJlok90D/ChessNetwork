@@ -1,14 +1,27 @@
 using Unity.Netcode;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.Events;
 
 public class GameStateChanger : NetworkBehaviour
 {
-    private NetworkVariable<State> _currentState = new NetworkVariable<State>(State.WaitingLobby, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
-    private UnityEvent<State> _stateChanged = new();
+    [SerializeField] private NetworkVariable<State> _currentState = new NetworkVariable<State>(State.WaitingLobby, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
 
-    public UnityEvent<State> StateChanged => _stateChanged;
+    private UnityEvent _sessionStart = new();
 
+    private State current
+    {
+        get
+        {
+            return _currentState.Value;
+        }
+        set
+        {
+            _currentState.Value = value;
+        }
+    }
+
+    public UnityEvent SessionStart => _sessionStart;
     public static GameStateChanger Singletone => _singletone;
     private static GameStateChanger _singletone;
 
@@ -23,55 +36,28 @@ public class GameStateChanger : NetworkBehaviour
         _singletone = this;
     }
 
-    public override void OnDestroy()
+    private void OnEnable()
     {
-        _singletone = null;
+        _currentState.OnValueChanged += OnStateChanged;
+    }
+    private void OnDisable()
+    {
+        _currentState.OnValueChanged -= OnStateChanged;
     }
 
-    public State CurrentState
+    public void StartSession()
     {
-        get
+        current = State.Launched;
+    }
+
+    private void OnStateChanged(State oldState, State newState)
+    {
+        switch (newState)
         {
-            return _currentState.Value;
+            case State.Launched:
+                _sessionStart.Invoke();
+            break;
         }
-        set
-        {
-            _currentState.Value = value;
-        }
-    }
-
-    [ServerRpc]
-    public void StartRoundServerRpc()
-    {
-        _currentState.Value = State.Launched;
-        StartRound();
-        StartRoundClientRpc();
-    }
-    [ClientRpc]
-    private void StartRoundClientRpc()
-    {
-        StartRound();
-    }
-    private void StartRound()
-    {
-        _stateChanged.Invoke(State.Launched);
-    }
-
-    [ServerRpc]
-    public void EndRoundServerRpc()
-    {
-        _currentState.Value = State.WaitingLobby;
-        EndRound();
-        EndRoundClientRpc();
-    }
-    [ClientRpc]
-    private void EndRoundClientRpc()
-    {
-        EndRound();
-    }
-    private void EndRound()
-    {
-        _stateChanged.Invoke(State.WaitingLobby);
     }
 
     public enum State
