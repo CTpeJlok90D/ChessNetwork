@@ -1,27 +1,18 @@
 using Unity.Netcode;
-using UnityEditor;
 using UnityEngine;
 using UnityEngine.Events;
 
 public class GameStateChanger : NetworkBehaviour
 {
     [SerializeField] private NetworkVariable<State> _currentState = new NetworkVariable<State>(State.WaitingLobby, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
+    [SerializeField] private NetworkVariable<Team> _currentTurn = new NetworkVariable<Team>(Team.White, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server); 
 
     private UnityEvent _sessionStart = new();
-
-    private State current
-    {
-        get
-        {
-            return _currentState.Value;
-        }
-        set
-        {
-            _currentState.Value = value;
-        }
-    }
+    private UnityEvent<Team> _turnChanged = new();
 
     public UnityEvent SessionStart => _sessionStart;
+    public UnityEvent<Team> TurnChanged => _turnChanged;
+    public Team CurrentTurn => _currentTurn.Value;
     public static GameStateChanger Singletone => _singletone;
     private static GameStateChanger _singletone;
 
@@ -39,15 +30,13 @@ public class GameStateChanger : NetworkBehaviour
     private void OnEnable()
     {
         _currentState.OnValueChanged += OnStateChanged;
+        _currentTurn.OnValueChanged += OnTurnChanged;
     }
+
     private void OnDisable()
     {
         _currentState.OnValueChanged -= OnStateChanged;
-    }
-
-    public void StartSession()
-    {
-        current = State.Launched;
+        _currentTurn.OnValueChanged -= OnTurnChanged;
     }
 
     private void OnStateChanged(State oldState, State newState)
@@ -57,6 +46,30 @@ public class GameStateChanger : NetworkBehaviour
             case State.Launched:
                 _sessionStart.Invoke();
             break;
+        }
+    }
+
+    private void OnTurnChanged(Team oldValue, Team newValue)
+    {
+        _turnChanged.Invoke(newValue);
+    }
+
+    public void StartSession()
+    {
+        _currentState.Value = State.Launched;
+        _currentTurn.Value = Team.White;
+    }
+
+    [ServerRpc(RequireOwnership = false)]
+    public void NextTurnServerRpc()
+    {
+        if (_currentTurn.Value == Team.White)
+        {
+            _currentTurn.Value = Team.Black;
+        }
+        else
+        {
+            _currentTurn.Value = Team.White;
         }
     }
 

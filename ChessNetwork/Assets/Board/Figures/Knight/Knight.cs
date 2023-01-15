@@ -22,7 +22,8 @@ public class Knight : Figure
             List<Turn> result = new();
             foreach (Turn turn in points.ToArray())
             {
-                if (Board.IsOnABoard(turn.MovePosition))
+                Figure eatenFigure = GetByPosition(turn.MovePosition);
+                if (Board.IsOnABoard(turn.MovePosition) && (GetByPosition(turn.MovePosition) == null || eatenFigure.Team != Team))
                 {
                     result.Add(turn);
                 }

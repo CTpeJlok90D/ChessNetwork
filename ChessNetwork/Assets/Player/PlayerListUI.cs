@@ -40,13 +40,5 @@ public class PlayerListUI : MonoBehaviour
     private void RemovePlayer(Player player)
     {
         _playerListItems.Remove(player);
-        if (player.IsLocalPlayer)
-        {
-            foreach (PlayerListItem playerListItem in _playerListItems.Values)
-            {
-                Destroy(playerListItem.gameObject);
-            }
-            _playerListItems.Clear();
-        }
     }
 }

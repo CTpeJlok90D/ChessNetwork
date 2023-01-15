@@ -1,3 +1,4 @@
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -6,6 +7,10 @@ public class CameraRotation : MonoBehaviour
     [SerializeField] private Transform _cameraCenterTransform;
     [SerializeField] private Vector2 _maxCameraRotaion;
     [SerializeField] private Vector2 _minCameraRotation;
+
+    [SerializeField] private Quaternion _whiteCameraRotate;
+    [SerializeField] private Quaternion _blackCameraRotate;
+
     private StandartInputActions _inputActions => StaticInput.Singletone;
 
     private void Awake()
@@ -19,6 +24,8 @@ public class CameraRotation : MonoBehaviour
         _inputActions.MapSwither.StartCameraRotate.canceled += OnStopCameraRotate;
         _inputActions.CameraRotate.Rotate.started += OnCameraRotate;
         _inputActions.CameraRotate.Rotate.performed += OnCameraRotate;
+
+        GameStateChanger.Singletone.SessionStart.AddListener(OnSerssionStart);
     }
     private void OnDisable()
     {
@@ -26,6 +33,8 @@ public class CameraRotation : MonoBehaviour
         _inputActions.MapSwither.StartCameraRotate.canceled -= OnStopCameraRotate;
         _inputActions.CameraRotate.Rotate.started -= OnCameraRotate;
         _inputActions.CameraRotate.Rotate.performed -= OnCameraRotate;
+
+        GameStateChanger.Singletone.SessionStart.RemoveListener(OnSerssionStart);
     }
 
     private void OnStartCameraRotate(InputAction.CallbackContext context)
@@ -37,6 +46,18 @@ public class CameraRotation : MonoBehaviour
     {
         _inputActions.Standart.Enable();
         _inputActions.CameraRotate.Disable();
+    }
+
+    private void OnSerssionStart()
+    {
+        if (Player.Local.Team == Team.White)
+        {
+            transform.rotation = _whiteCameraRotate;
+        }
+        if (Player.Local.Team == Team.Black)
+        {
+            transform.rotation = _blackCameraRotate;
+        }
     }
 
     private void OnCameraRotate(InputAction.CallbackContext context)

@@ -1,26 +1,32 @@
+using Unity.Netcode;
 using UnityEngine;
 
 public record Turn
 {
-    public Vector2Int MovePosition;
-    public Vector2Int EatPosition;
-    public bool IsEatTurn = true;
-    public Figure OwnFigure;
+    private Vector2Int _movePosition;
+    private Vector2Int _eatPosition;
+    private bool _isEatTurn;
+    private Figure _ownFigureId;
+
+    public Vector2Int MovePosition => _movePosition;
+    public Vector2Int EatPosition => _eatPosition;
+    public bool IsEatTurn => _isEatTurn;
+    public Figure OwnFigure => _ownFigureId;
 
     public Turn(Figure ownFigure, Vector2Int movePosition, Vector2Int eatPosition)
     {
-        MovePosition = movePosition;
-        EatPosition = eatPosition;
-        IsEatTurn = true;
-        OwnFigure = ownFigure;
+        _movePosition = movePosition;
+        _eatPosition = eatPosition;
+        _isEatTurn = true;
+        _ownFigureId = ownFigure;
     }
 
     public Turn(Figure ownFigure, Vector2Int movePosition)
     {
-        MovePosition = movePosition;
-        EatPosition = new Vector2Int(-1,-1);
-        IsEatTurn = false;
-        OwnFigure = ownFigure;
+        _movePosition = movePosition;
+        _eatPosition = new Vector2Int(-1,-1);
+        _isEatTurn = false;
+        _ownFigureId = ownFigure;
     }
 
     public void Execute()
