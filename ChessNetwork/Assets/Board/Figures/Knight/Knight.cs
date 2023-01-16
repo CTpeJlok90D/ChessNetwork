@@ -29,6 +29,8 @@ public class Knight : Figure
                 }
             }
 
+            
+
             return result;
         }
     }
