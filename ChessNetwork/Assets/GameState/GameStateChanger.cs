@@ -13,6 +13,7 @@ public class GameStateChanger : NetworkBehaviour
     public UnityEvent SessionStart => _sessionStart;
     public UnityEvent<Team> TurnChanged => _turnChanged;
     public Team CurrentTurn => _currentTurn.Value;
+    public State CurrentState => _currentState.Value;
     public static GameStateChanger Singletone => _singletone;
     private static GameStateChanger _singletone;
 
