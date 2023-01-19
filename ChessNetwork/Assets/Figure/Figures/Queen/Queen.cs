@@ -1,4 +1,3 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -9,22 +8,28 @@ public class Queen : Figure
         get
         {
             List<Turn> result = new List<Turn>();
+            foreach (Vector2Int position in EatPostions)
+            {
+                Turn newTurn = new Turn(this, position, position);
+                if (ThisTurnIsPossible(newTurn))
+                {
+                    result.Add(newTurn);
+                }
+            }
+            return result;
+        }
+    }
+
+    public override List<Vector2Int> EatPostions
+    {
+        get
+        {
+            List<Vector2Int> result = new List<Vector2Int>();
 
             bool AddPosition(Vector2Int position)
             {
-                if (Board.IsOnABoard(Position) == false)
-                {
-                    return true;
-                }
-
-                Figure figure = GetByPosition(position);
-                if (figure != null && figure.Team == Team)
-                {
-                    return true;
-                }
-                result.Add(new Turn(this, position, position));
-
-                return figure != null;
+                result.Add(position);
+                return GetByPosition(position) != null;
             }
 
             for (int x = Position.x + 1; x < Board.Size.x; x++)

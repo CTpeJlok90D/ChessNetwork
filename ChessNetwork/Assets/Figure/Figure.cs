@@ -9,26 +9,45 @@ public abstract class Figure : NetworkBehaviour
     [SerializeField] private Team _team;
 
     [SerializeField] private NetworkVariable<Vector2Int> _position = new(Vector2Int.zero, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
+    private Vector2Int _localPosition;
+
 
     private UnityEvent _selected = new();
     private UnityEvent _deselected = new();
+    private UnityEvent _moved = new();
 
     public UnityEvent Selected => _selected;
     public UnityEvent Deselected => _deselected;
+    public UnityEvent Moved => _moved;
     public Board Board => _board;
-    public Vector2Int Position => _position.Value;
+    public Vector2Int Position => _localPosition;
     public Team Team => _team;
 
-    private static List<Figure> _activeList = new();
-    private static Dictionary<ulong, Figure> _byID = new();
+
+    private static List<Figure> _list = new();
+
     private static Figure _choosen;
-    public static List<Figure> ActiveList => new(_activeList);
-    public static Figure Choosen => _choosen;
-    public static Dictionary<ulong, Figure> ByID => new(_byID);
+    private static Dictionary<Team, Figure> _teamKing = new();
+    
+    public static Dictionary<Team, Figure> TeamKing => _teamKing;
+    public static List<Figure> List => new(_list);
+    public static List<Figure> ByTeam(Team team)
+    {
+        List<Figure> result = new List<Figure>();
+        foreach (Figure figure in _list)
+        {
+            if (figure.Team == team)
+            {
+                result.Add(figure);
+            }
+        }
+        return result;
+    }
+
 
     public Figure GetByPosition(Vector2Int position)
     {
-        foreach (Figure figure in _activeList)
+        foreach (Figure figure in _list)
         {
             if (figure.Position == position)
             {
@@ -43,36 +62,73 @@ public abstract class Figure : NetworkBehaviour
         get;
     }
 
-    public virtual List<Vector2Int> EatPostion
+    public abstract List<Vector2Int> EatPostions
     {
-        get
-        {
-            List<Vector2Int> result = new();
-
-            foreach (Turn turn in PossibleTurns)
-            {
-                result.Add(turn.EatPosition);
-            }
-
-            return result;
-        }
+        get;
     }
 
-    private void OnEnable()
+    public bool ThisTurnIsPossible(Turn turn)
     {
-        _activeList.Add(this);
+        return TeamKing[Team].WillBeDanguresAfter(turn) == false && 
+               Board.IsOnABoard(turn.MovePosition) && 
+               (GetByPosition(turn.EatPosition) == null ||
+               GetByPosition(turn.EatPosition).Team != Team);
+    }
+
+    public bool WillBeDanguresAfter(Turn turn)
+    {
+        Vector2Int oldPosition = turn.Figure.Position;
+        Figure eatFigure = GetByPosition(turn.EatPosition);
+
+        turn.Figure._localPosition = turn.MovePosition;
+        eatFigure?.gameObject.SetActive(false);
+
+        foreach (Figure figure in Figure.List)
+        {
+            if (figure.Team == Team)
+            {
+                continue;
+            }
+            foreach (Vector2Int eatPosition in figure.EatPostions)
+            {
+                if (eatPosition == Position)
+                {
+                    turn.Figure._localPosition = oldPosition;
+                    eatFigure?.gameObject.SetActive(true);
+
+                    return true;
+                }
+            }
+        }
+
+        turn.Figure._localPosition = oldPosition;
+        eatFigure?.gameObject.SetActive(true);
+
+        return false;
+    }
+
+    protected void Awake()
+    {
+        _position.Value = new Vector2Int((int)transform.localPosition.x, (int)transform.localPosition.z);
+        _localPosition = _position.Value;
+    }
+
+    protected void OnEnable()
+    {
+        _list.Add(this);
         _position.OnValueChanged += OnPositionChanged;
     }
 
-    private void OnDisable()
+    protected void OnDisable()
     {
-        _activeList.Remove(this);
+        _list.Remove(this);
         _position.OnValueChanged += OnPositionChanged;
     }
 
     private void OnPositionChanged(Vector2Int oldValue, Vector2Int newValue)
     {
         transform.localPosition = new Vector3(newValue.x, 0, newValue.y);
+        _localPosition = newValue;
     }
 
     public override void OnNetworkSpawn()
@@ -91,7 +147,7 @@ public abstract class Figure : NetworkBehaviour
             Deselect();
             return;
         }
-        foreach (Figure figure in ActiveList)
+        foreach (Figure figure in List)
         {
             figure.Deselect();
         }
@@ -114,6 +170,7 @@ public abstract class Figure : NetworkBehaviour
     {
         if (GameStateChanger.Singletone.CurrentTurn != Team)
         {
+            Debug.Log("LOL");
             return;
         }
 
@@ -124,13 +181,15 @@ public abstract class Figure : NetworkBehaviour
         {
             eatenFigure.OnFigureEatServerRpc();
         }
-        UseTurnServerRpc(turn.MovePosition);
+        MoveFigureServerRpc(turn.MovePosition);
+
+        _moved.Invoke();
 
         GameStateChanger.Singletone.NextTurnServerRpc();
     }
 
     [ServerRpc(RequireOwnership = false)]
-    private void UseTurnServerRpc(Vector2Int movePosition)
+    private void MoveFigureServerRpc(Vector2Int movePosition)
     {
         _position.Value = movePosition;
     }
@@ -147,14 +206,4 @@ public abstract class Figure : NetworkBehaviour
         transform.localPosition = new Vector3(-1, 0, -1);
         gameObject.SetActive(false);
     }
-
-#if UNITY_EDITOR
-    private void OnValidate()
-    {
-        if (Application.isEditor)
-        {
-            _position.Value = new Vector2Int((int)transform.localPosition.x, (int)transform.localPosition.z);
-        }
-    }
-#endif
 }

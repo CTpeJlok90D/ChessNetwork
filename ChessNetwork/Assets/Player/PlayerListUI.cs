@@ -13,9 +13,9 @@ public class PlayerListUI : MonoBehaviour
         Player.Connected.AddListener(AddPlayer);
         Player.Disconected.AddListener(RemovePlayer);
 
-        foreach (PlayerListItem player in _playerListItems.Values)
+        foreach (PlayerListItem playerListItem in _playerListItems.Values)
         {
-            Destroy(player);
+            Destroy(playerListItem.gameObject);
         }
         _playerListItems.Clear();
 

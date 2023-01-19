@@ -7,20 +7,14 @@ public class Knight : Figure
     {
         get
         {
-            List<Turn> points = new();
-
-            foreach (Vector2Int position in EatPostion)
-            {
-                points.Add(new Turn(this, position, position));
-            }
-
             List<Turn> result = new();
-            foreach (Turn turn in points.ToArray())
+
+            foreach (Vector2Int position in EatPostions)
             {
-                Figure eatenFigure = GetByPosition(turn.MovePosition);
-                if (Board.IsOnABoard(turn.MovePosition) && (GetByPosition(turn.MovePosition) == null || eatenFigure.Team != Team))
+                Turn newTurn = new Turn(this, position, position);
+                if (ThisTurnIsPossible(newTurn))
                 {
-                    result.Add(turn);
+                    result.Add(newTurn);
                 }
             }
 
@@ -28,7 +22,7 @@ public class Knight : Figure
         }
     }
 
-    public override List<Vector2Int> EatPostion 
+    public override List<Vector2Int> EatPostions 
     {
         get
         {

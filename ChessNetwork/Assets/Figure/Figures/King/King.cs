@@ -9,29 +9,12 @@ public class King : Figure
         { 
             List<Turn> result = new();
 
-            foreach (Vector2Int nearPosition in EatPostion)
+            foreach (Vector2Int position in EatPostions)
             {
-                if (Board.IsOnABoard(nearPosition) && GetByPosition(nearPosition).Team != Team)
+                Turn newTurn = new Turn(this, position, position);
+                if (ThisTurnIsPossible(newTurn))
                 {
-                    result.Add(new Turn(this, nearPosition, nearPosition));
-                }
-            }
-
-            foreach (Figure figure in Figure.ActiveList)
-            { 
-                if (figure.Team == Team)
-                {
-                    continue;
-                }
-                foreach (Vector2Int eatPosition in figure.EatPostion)
-                {
-                    foreach (Turn kingTurn in result.ToArray())
-                    {
-                        if (kingTurn.MovePosition == eatPosition)
-                        {
-                            result.Remove(kingTurn);
-                        }
-                    }
+                    result.Add(newTurn);
                 }
             }
 
@@ -39,7 +22,7 @@ public class King : Figure
         }
     }
 
-    public override List<Vector2Int> EatPostion
+    public override List<Vector2Int> EatPostions
     {
         get
         {
@@ -59,5 +42,11 @@ public class King : Figure
 
             return result;
         }
+    }
+
+    private new void Awake()
+    {
+        base.Awake();
+        TeamKing[Team] = this;
     }
 }

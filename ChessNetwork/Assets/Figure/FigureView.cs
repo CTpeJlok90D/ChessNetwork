@@ -40,7 +40,6 @@ public class FigureView : MonoBehaviour
         RemoveAllTurnView();
     }
 
-
     private void RemoveAllTurnView()
     {
         foreach (TurnView turn in _instances)
